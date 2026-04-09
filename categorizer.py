@@ -350,6 +350,33 @@ def add_rule_interactively(rules: dict[str, CategoryRule]) -> None:
     save_rules_overrides(rules, DEFAULT_RULES)
     print(f"{GREEN}Added rule for {merchant} (saved to data directory).{RESET}")
 
+def run_classification(
+    file_path: str | Path | None = None,
+    use_mock: bool = False,
+    threshold: float = 0.76,
+    rules: dict[str, CategoryRule] | None = None,
+) -> ClassificationResult:
+    active_rules: dict[str, CategoryRule] = (rules or DEFAULT_RULES).copy()
+    warnings: list[str] = []
+
+    if use_mock:
+        transactions = generate_mock_transactions()
+    else:
+        if file_path is None:
+            raise ValueError("A file path is required unless mock mode is enabled.")
+        transactions, warnings = read_transaction_file(file_path)
+
+    categorized, flagged = categorize_transactions(transactions, active_rules, threshold)
+    return cast(
+        ClassificationResult,
+        {
+            "records": categorized,
+            "flagged": flagged,
+            "warnings": warnings,
+            "summary": summarize_categories(categorized),
+            "rules": active_rules,
+        },
+    )
 
 
 
