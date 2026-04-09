@@ -334,6 +334,21 @@ def print_summary(records: Sequence[Mapping[str, Any]], flagged: Sequence[Mappin
         print()
         print(f"{GREEN}No low-confidence matches needed review.{RESET}")
 
+def add_rule_interactively(rules: dict[str, CategoryRule]) -> None:
+    merchant = input("Merchant name to match: ").strip()
+    category = input("Category: ").strip()
+    subcategory = input("Subcategory: ").strip()
+    if not merchant:
+        print(f"{RED}Merchant cannot be blank.{RESET}")
+        return
+    if category not in VALID_CATEGORIES:
+        print(f"{RED}That category is not in the known category set.{RESET}")
+        return
+    if not subcategory:
+        subcategory = category
+    rules[clean_text(merchant)] = {"category": category, "subcategory": subcategory}
+    save_rules_overrides(rules, DEFAULT_RULES)
+    print(f"{GREEN}Added rule for {merchant} (saved to data directory).{RESET}")
 
 
 
