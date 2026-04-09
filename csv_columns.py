@@ -88,3 +88,21 @@ def detect_columns(headers: list[str]) -> dict[str, int | None]:
             if per_col[idx][role_idx] < _MIN_ROLE_SCORE:
                 best_mapping[key] = None
         return best_mapping
+
+    used: set[int] = set()
+    result = empty.copy()
+    role_keys = ("date", "merchant", "amount")
+    for role_idx, key in enumerate(role_keys):
+        best_i: int | None = None
+        best_s = -1.0
+        for i in range(n):
+            if i in used:
+                continue
+            s = per_col[i][role_idx]
+            if s > best_s:
+                best_s = s
+                best_i = i
+        if best_i is not None and best_s >= _MIN_ROLE_SCORE:
+            result[key] = best_i
+            used.add(best_i)
+    return result
