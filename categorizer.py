@@ -159,7 +159,34 @@ def read_transaction_file(file_path: str | Path) -> tuple[list[dict[str, Any]], 
                 warnings.append(f"Skipped line {line_number}: {error}")
     return transactions, warnings
 
+def generate_mock_transactions() -> list[dict[str, Any]]:
+    today = date.today()
+    merchants = [
+        ("Starbucks", 6.45),
+        ("Starbuks", 5.95),
+        ("Whole Foods", 84.20),
+        ("Shell Oil", 47.83),
+        ("Netflixx", 15.49),
+        ("Spotify", 9.99),
+        ("Amazon Marketplace", 42.18),
+        ("Walgreens", 18.32),
+        ("Comcast Cable", 79.99),
+        ("Landlord Portal", 1450.00),
+        ("Uber Trip", 23.50),
+        ("Target", 61.70),
+    ]
 
+    transactions: list[dict[str, Any]] = []
+    for index, (merchant, amount) in enumerate(merchants):
+        transaction_date = today - timedelta(days=index * 2)
+        transactions.append(
+            {
+                "date": transaction_date.isoformat(),
+                "merchant": merchant,
+                "amount": amount,
+            }
+        )
+    return transactions
 
 
 
