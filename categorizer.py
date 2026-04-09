@@ -18,7 +18,27 @@ from schemas import (
 from storage import format_money, load_merged_category_rules, save_rules_overrides
 from textutil import clean_text, similarity_ratio
 
+GREEN = "\033[92m"
+YELLOW = "\033[93m"
+BLUE = "\033[94m"
+RED = "\033[91m"
+RESET = "\033[0m"
 
+VALID_CATEGORIES = {
+    "Food & Drink",
+    "Transportation",
+    "Entertainment",
+    "Shopping",
+    "Utilities",
+    "Health",
+    "Housing",
+    "Income",
+    "Travel",
+    "Other",
+    "Unknown",
+}
+
+_MIN_EXACT_SUBSTRING_CHARS = 4
 
 
 
