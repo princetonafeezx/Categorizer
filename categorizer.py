@@ -57,6 +57,19 @@ def _bounded_phrase_in_text(haystack: str, needle: str) -> bool:
             return True
         start = idx + 1
 
+def _tokens_have_consecutive_phrase(merchant_tokens: list[str], rule: str) -> bool:
+    rule_tokens = rule.split()
+    if not rule_tokens:
+        return False
+    if len(rule_tokens) == 1:
+        return rule_tokens[0] in merchant_tokens
+    m, r = len(merchant_tokens), len(rule_tokens)
+    if r > m:
+        return False
+    for i in range(m - r + 1):
+        if merchant_tokens[i : i + r] == rule_tokens:
+            return True
+    return False
 
 
 
