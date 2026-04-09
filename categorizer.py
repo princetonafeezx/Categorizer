@@ -188,7 +188,62 @@ def generate_mock_transactions() -> list[dict[str, Any]]:
         )
     return transactions
 
+def find_best_rule_match(
+    merchant: str, rules: dict[str, CategoryRule], threshold: float = 0.76
+) -> RuleMatchResult:
+    merchant_key = clean_text(merchant)
+    best_key: str | None = None
+    best_score = 0.0
+    best_match_type = "unknown"
 
+    for rule_key, payload in rules.items():
+        normalized_rule = clean_text(rule_key)
+        if not normalized_rule:
+            continue
+        if _exact_rule_matches(merchant_key, normalized_rule):
+            return cast(
+                RuleMatchResult,
+                {
+                    "category": payload["category"],
+                    "subcategory": payload["subcategory"],
+                    "confidence": 1.0,
+                    "match_type": "exact",
+                    "rule_key": rule_key,
+                },
+            )
+
+        candidate_scores = [similarity_ratio(merchant_key, normalized_rule)]
+        for word in merchant_key.split():
+            candidate_scores.append(similarity_ratio(word, normalized_rule))
+        score = max(candidate_scores)
+        if score > best_score:
+            best_score = score
+            best_key = rule_key
+            best_match_type = "fuzzy"
+
+    if best_key is not None and best_score >= threshold:
+        payload = rules[best_key]
+        return cast(
+            RuleMatchResult,
+            {
+                "category": payload["category"],
+                "subcategory": payload["subcategory"],
+                "confidence": round(best_score, 3),
+                "match_type": best_match_type,
+                "rule_key": best_key,
+            },
+        )
+
+    return cast(
+        RuleMatchResult,
+        {
+            "category": "Unknown",
+            "subcategory": "Unknown",
+            "confidence": round(best_score, 3),
+            "match_type": "unknown",
+            "rule_key": "",
+        },
+    )
 
 
 
