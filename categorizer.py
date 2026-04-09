@@ -71,6 +71,23 @@ def _tokens_have_consecutive_phrase(merchant_tokens: list[str], rule: str) -> bo
             return True
     return False
 
+def _exact_rule_matches(merchant_key: str, normalized_rule: str) -> bool:
+    if not normalized_rule:
+        return False
+    if merchant_key == normalized_rule:
+        return True
+    merchant_tokens = merchant_key.split()
+    if _tokens_have_consecutive_phrase(merchant_tokens, normalized_rule):
+        return True
+    compact_rule_len = len(normalized_rule.replace(" ", ""))
+    if compact_rule_len < _MIN_EXACT_SUBSTRING_CHARS:
+        return False
+    if _bounded_phrase_in_text(merchant_key, normalized_rule):
+        return True
+    if _bounded_phrase_in_text(normalized_rule, merchant_key):
+        return True
+    return False
+
 
 
 
