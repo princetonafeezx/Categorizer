@@ -113,6 +113,51 @@ DEFAULT_RULES: dict[str, CategoryRule] = {
     "payroll": {"category": "Income", "subcategory": "Paycheck"},
 }
 
+def read_transaction_file(file_path: str | Path) -> tuple[list[dict[str, Any]], list[str]]:
+    transactions: list[dict[str, Any]] = []
+    warnings: list[str] = []
+    input_path = Path(file_path)
+    if not input_path.exists():
+        raise FileNotFoundError(f"Could not find file: {input_path}")
+
+    with input_path.open("r", newline="", encoding="utf-8-sig") as handle:
+        reader = csv.reader(handle)
+        try:
+            headers = next(reader)
+        except StopIteration:
+            return [], ["The file was empty."]
+
+        column_map = detect_columns(headers)
+        needed_indexes = {column_map["date"], column_map["merchant"], column_map["amount"]}
+        if None in needed_indexes:
+            warnings.append("I could not confidently find every column, so some rows may be skipped.")
+
+        for line_number, row in enumerate(reader, start=2):
+            if not row or not any(cell.strip() for cell in row):
+                continue
+            try:
+                cd = column_map["date"]
+                cm = column_map["merchant"]
+                ca = column_map["amount"]
+                if cd is None or cm is None or ca is None:
+                    raise ValueError("Row does not have enough columns")
+                if max(cd, cm, ca) >= len(row):
+                    raise ValueError("Row does not have enough columns")
+                date_value = row[cd].strip()
+                merchant_value = row[cm].strip()
+                amount_value = parse_amount(row[ca])
+                if not date_value or not merchant_value:
+                    raise ValueError("Date or merchant was blank")
+                transactions.append(
+                    {
+                        "date": date_value,
+                        "merchant": merchant_value,
+                        "amount": amount_value,
+                    }
+                )
+            except (ValueError, TypeError) as error:
+                warnings.append(f"Skipped line {line_number}: {error}")
+    return transactions, warnings
 
 
 
