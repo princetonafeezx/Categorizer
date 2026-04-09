@@ -88,6 +88,30 @@ def _exact_rule_matches(merchant_key: str, normalized_rule: str) -> bool:
         return True
     return False
 
+DEFAULT_RULES: dict[str, CategoryRule] = {
+    "starbucks": {"category": "Food & Drink", "subcategory": "Dining Out"},
+    "whole foods": {"category": "Food & Drink", "subcategory": "Groceries"},
+    "trader joe s": {"category": "Food & Drink", "subcategory": "Groceries"},
+    "shell": {"category": "Transportation", "subcategory": "Transportation"},
+    "chevron": {"category": "Transportation", "subcategory": "Transportation"},
+    "uber": {"category": "Transportation", "subcategory": "Transportation"},
+    "lyft": {"category": "Transportation", "subcategory": "Transportation"},
+    "netflix": {"category": "Entertainment", "subcategory": "Entertainment"},
+    "spotify": {"category": "Entertainment", "subcategory": "Entertainment"},
+    "steam": {"category": "Entertainment", "subcategory": "Entertainment"},
+    "amazon": {"category": "Shopping", "subcategory": "Shopping"},
+    "target": {"category": "Shopping", "subcategory": "Shopping"},
+    "walmart": {"category": "Shopping", "subcategory": "Shopping"},
+    "cvs": {"category": "Health", "subcategory": "Health"},
+    "walgreens": {"category": "Health", "subcategory": "Health"},
+    "kaiser": {"category": "Health", "subcategory": "Insurance"},
+    "comcast": {"category": "Utilities", "subcategory": "Utilities"},
+    "pge": {"category": "Utilities", "subcategory": "Utilities"},
+    "at&t": {"category": "Utilities", "subcategory": "Utilities"},
+    "landlord": {"category": "Housing", "subcategory": "Rent"},
+    "apartment": {"category": "Housing", "subcategory": "Rent"},
+    "payroll": {"category": "Income", "subcategory": "Paycheck"},
+}
 
 
 
