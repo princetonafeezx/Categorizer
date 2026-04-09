@@ -33,4 +33,19 @@ _AMOUNT_KEYWORDS = (
     "price",
 )
 
-
+def _score_header_for_role(header: str, keywords: tuple[str, ...]) -> float:
+    h = clean_text(header)
+    if not h:
+        return 0.0
+    tokens = h.split()
+    best = 0.0
+    for kw in keywords:
+        if h == kw:
+            best = max(best, 1.0)
+        elif kw in tokens:
+            best = max(best, 0.95)
+        elif h.startswith(kw + " ") or h.endswith(" " + kw):
+            best = max(best, 0.9)
+        elif len(kw) >= _MIN_KEYWORD_SUBSTRING_LEN and kw in h:
+            best = max(best, 0.75)
+    return best
