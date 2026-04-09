@@ -49,3 +49,21 @@ def _score_header_for_role(header: str, keywords: tuple[str, ...]) -> float:
         elif len(kw) >= _MIN_KEYWORD_SUBSTRING_LEN and kw in h:
             best = max(best, 0.75)
     return best
+
+def detect_columns(headers: list[str]) -> dict[str, int | None]:
+
+    n = len(headers)
+    
+    empty: dict[str, int | None] = {"date": None, "merchant": None, "amount": None}
+    
+    if n == 0:
+        return empty.copy()
+    per_col: list[tuple[float, float, float]] = []
+    for h in headers:
+        per_col.append(
+            (
+                _score_header_for_role(h, _DATE_KEYWORDS),
+                _score_header_for_role(h, _MERCHANT_KEYWORDS),
+                _score_header_for_role(h, _AMOUNT_KEYWORDS),
+            )
+        )
