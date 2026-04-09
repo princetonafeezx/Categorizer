@@ -40,6 +40,23 @@ VALID_CATEGORIES = {
 
 _MIN_EXACT_SUBSTRING_CHARS = 4
 
+def _bounded_phrase_in_text(haystack: str, needle: str) -> bool:
+    
+    if not needle or needle not in haystack:
+        return False
+    start = 0
+    needle_len = len(needle)
+    while True:
+        idx = haystack.find(needle, start)
+        if idx == -1:
+            return False
+        before_ok = idx == 0 or haystack[idx - 1] == " "
+        after_idx = idx + needle_len
+        after_ok = after_idx == len(haystack) or haystack[after_idx] == " "
+        if before_ok and after_ok:
+            return True
+        start = idx + 1
+
 
 
 
