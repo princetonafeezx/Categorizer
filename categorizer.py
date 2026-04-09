@@ -286,7 +286,24 @@ def categorize_transactions(
 
     return categorized, flagged
 
+def summarize_categories(
+    records: list[dict[str, Any]] | Sequence[Mapping[str, Any]],
+) -> list[CategorySummaryRow]:
+    summary: dict[str, dict[str, Any]] = {}
+    for record in records:
+        category = str(record.get("category", "Unknown"))
+        try:
+            amount = float(record.get("amount", 0.0))
+        except (TypeError, ValueError):
+            amount = 0.0
+        if category not in summary:
+            summary[category] = {"category": category, "total": 0.0, "count": 0}
+        summary[category]["total"] += amount
+        summary[category]["count"] += 1
 
+    rows = list(summary.values())
+    rows.sort(key=lambda item: (-float(item["total"]), item["category"]))
+    return cast(list[CategorySummaryRow], rows)
 
 
 
