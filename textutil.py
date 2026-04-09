@@ -27,3 +27,20 @@ def _levenshtein_distance(left: str, right: str) -> int:
             current_row.append(min(insert_cost, delete_cost, replace_cost))
         previous_row = current_row
     return previous_row[-1]
+
+def similarity_ratio(left: str, right: str) -> float:
+    left = clean_text(left)
+    right = clean_text(right)
+    if not left and not right:
+        return 1.0
+    if not left or not right:
+        return 0.0
+    if left == right:
+        return 1.0
+    if left in right or right in left:
+        shorter = min(len(left), len(right))
+        longer = max(len(left), len(right))
+        return shorter / longer
+    distance = _levenshtein_distance(left, right)
+    largest = max(len(left), len(right))
+    return max(0.0, 1.0 - (distance / largest))
