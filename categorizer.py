@@ -378,18 +378,51 @@ def run_classification(
         },
     )
 
+def menu() -> None:
+    rules = load_merged_category_rules(DEFAULT_RULES)
+    valid_choices = {"1", "2", "3", "4", "5"}
+    last_result = None
 
+    while True:
+        print()
+        print(f"{BLUE}ll_categorizer: Smart Expense Classifier{RESET}")
+        print("1. Classify transactions from CSV")
+        print("2. Classify built-in mock data")
+        print("3. View rules")
+        print("4. Add a rule")
+        print("5. Quit")
+        choice = input("Choose an option: ").strip()
 
+        if choice not in valid_choices:
+            print(f"{RED}Please choose one of the menu numbers.{RESET}")
+            continue
 
+        if choice == "1":
+            file_path = input("CSV path: ").strip()
+            try:
+                last_result = run_classification(file_path=file_path, rules=rules)
+                for warning in last_result["warnings"]:
+                    print(f"{YELLOW}{warning}{RESET}")
+                print_summary(last_result["records"], last_result["flagged"])
+            except (OSError, ValueError, UnicodeError, csv.Error) as error:
+                print(f"{RED}Could not classify that file: {error}{RESET}")
 
+        elif choice == "2":
+            last_result = run_classification(use_mock=True, rules=rules)
+            print_summary(last_result["records"], last_result["flagged"])
 
+        elif choice == "3":
+            print_rules(rules)
+            if last_result:
+                print()
+                print(f"Last run had {len(last_result['records'])} categorized transactions.")
 
+        elif choice == "4":
+            add_rule_interactively(rules)
 
-
-
-
-
-
+        elif choice == "5":
+            print("Exiting classifier.")
+            break
 
 
 def main() -> None:
