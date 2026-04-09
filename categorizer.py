@@ -245,6 +245,53 @@ def find_best_rule_match(
         },
     )
 
+def categorize_transactions(
+    transactions: list[dict[str, Any]],
+    rules: dict[str, CategoryRule] | None = None,
+    threshold: float = 0.76,
+) -> tuple[list[CategorizedRecord], list[CategorizedRecord]]:
+    active_rules = rules or DEFAULT_RULES.copy()
+    categorized: list[CategorizedRecord] = []
+    flagged: list[CategorizedRecord] = []
+
+    for transaction in transactions:
+        match = find_best_rule_match(str(transaction.get("merchant", "")), active_rules, threshold)
+        category = match["category"]
+        if category not in VALID_CATEGORIES:
+            category = "Unknown"
+        sub_raw = str(match["subcategory"]).strip()
+        subcategory = sub_raw if sub_raw else category
+        try:
+            amount = float(transaction["amount"])
+        except (KeyError, TypeError, ValueError):
+            amount = 0.0
+        row = cast(
+            CategorizedRecord,
+            {
+                "date": transaction.get("date", ""),
+                "merchant": str(transaction.get("merchant", "")),
+                "amount": amount,
+                "category": category,
+                "subcategory": subcategory,
+                "confidence": float(match["confidence"]),
+                "match_type": match["match_type"],
+            },
+        )
+        categorized.append(row)
+
+        if row["match_type"] == "fuzzy" and row["confidence"] < min(0.95, threshold + 0.10):
+            flagged.append(row)
+        elif row["match_type"] == "unknown":
+            flagged.append(row)
+
+    return categorized, flagged
+
+
+
+
+
+
+
 
 
 
