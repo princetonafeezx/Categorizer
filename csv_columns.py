@@ -67,3 +67,24 @@ def detect_columns(headers: list[str]) -> dict[str, int | None]:
                 _score_header_for_role(h, _AMOUNT_KEYWORDS),
             )
         )
+
+    if n >= 3:
+        best_total = -1.0
+        best_mapping = empty.copy()
+        for cols in itertools.permutations(range(n), 3):
+            d, m, a = cols
+            total = per_col[d][0] + per_col[m][1] + per_col[a][2]
+            if total > best_total:
+                best_total = total
+                best_mapping = {"date": d, "merchant": m, "amount": a}
+        if best_total <= 0.0:
+            return empty.copy()
+        role_order = ("date", "merchant", "amount")
+        for key in role_order:
+            idx = best_mapping[key]
+            if idx is None:
+                continue
+            role_idx = role_order.index(key)
+            if per_col[idx][role_idx] < _MIN_ROLE_SCORE:
+                best_mapping[key] = None
+        return best_mapping
