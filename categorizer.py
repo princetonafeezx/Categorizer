@@ -305,6 +305,12 @@ def summarize_categories(
     rows.sort(key=lambda item: (-float(item["total"]), item["category"]))
     return cast(list[CategorySummaryRow], rows)
 
+def print_rules(rules: dict[str, CategoryRule] | None = None) -> None:
+    active_rules = rules or DEFAULT_RULES
+    print(f"{BLUE}Merchant Rule{' ' * 18}Category{' ' * 12}Subcategory{RESET}")
+    print("-" * 68)
+    for merchant, payload in sorted(active_rules.items()):
+        print(f"{merchant:<30}{payload['category']:<24}{payload['subcategory']}")
 
 
 
