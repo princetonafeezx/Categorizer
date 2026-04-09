@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "Schema/category-rule.schema.json",
+  "title": "CategoryRule",
+  "type": "object",
+  "description": "Merchant rule target for the categorizer.",
+  "properties": {
+    "category": {
+      "type": "string"
+    },
+    "subcategory": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "category",
+    "subcategory"
+  ],
+  "additionalProperties": false,
+  "examples": [
+    {
+      "category": "Food & Drink",
+      "subcategory": "Dining Out"
+    }
+  ]
+}

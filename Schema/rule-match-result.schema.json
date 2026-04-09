@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "Schema/rule-match-result.schema.json",
+  "title": "RuleMatchResult",
+  "type": "object",
+  "description": "Output of categorizer.find_best_rule_match.",
+  "properties": {
+    "category": {
+      "type": "string"
+    },
+    "subcategory": {
+      "type": "string"
+    },
+    "confidence": {
+      "type": "number"
+    },
+    "match_type": {
+      "type": "string"
+    },
+    "rule_key": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "category",
+    "subcategory",
+    "confidence",
+    "match_type",
+    "rule_key"
+  ],
+  "additionalProperties": false,
+  "examples": [
+    {
+      "category": "Transportation",
+      "subcategory": "Transportation",
+      "confidence": 1.0,
+      "match_type": "exact",
+      "rule_key": "uber"
+    }
+  ]
+}

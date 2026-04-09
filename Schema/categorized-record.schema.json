@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "Schema/categorized-record.schema.json",
+  "title": "CategorizedRecord",
+  "type": "object",
+  "description": "Single transaction row after classification or when loaded from CSV.",
+  "properties": {
+    "date": {
+      "type": "string",
+      "description": "Serialized transaction date. In JSON this should be a string, typically ISO 8601 like 2024-01-15."
+    },
+    "merchant": {
+      "type": "string"
+    },
+    "amount": {
+      "type": "number"
+    },
+    "category": {
+      "type": "string"
+    },
+    "subcategory": {
+      "type": "string"
+    },
+    "confidence": {
+      "type": "number"
+    },
+    "match_type": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "date",
+    "merchant",
+    "amount",
+    "category"
+  ],
+  "additionalProperties": false,
+  "examples": [
+    {
+      "date": "2024-01-15",
+      "merchant": "Starbucks",
+      "amount": 6.45,
+      "category": "Food & Drink",
+      "subcategory": "Dining Out",
+      "confidence": 1.0,
+      "match_type": "exact"
+    }
+  ]
+}

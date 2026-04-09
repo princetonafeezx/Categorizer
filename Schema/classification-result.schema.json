@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "Schema/classification-result.schema.json",
+  "title": "ClassificationResult",
+  "type": "object",
+  "description": "Return value of categorizer.run_classification.",
+  "properties": {
+    "records": {
+      "type": "array",
+      "items": {
+        "$ref": "categorized-record.schema.json"
+      }
+    },
+    "flagged": {
+      "type": "array",
+      "items": {
+        "$ref": "categorized-record.schema.json"
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "summary": {
+      "type": "array",
+      "items": {
+        "$ref": "category-summary-row.schema.json"
+      }
+    },
+    "rules": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "category-rule.schema.json"
+      }
+    }
+  },
+  "required": [
+    "records",
+    "flagged",
+    "warnings",
+    "summary",
+    "rules"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "Schema/category-summary-row.schema.json",
+  "title": "CategorySummaryRow",
+  "type": "object",
+  "description": "One line from categorizer.summarize_categories.",
+  "properties": {
+    "category": {
+      "type": "string"
+    },
+    "total": {
+      "type": "number"
+    },
+    "count": {
+      "type": "integer"
+    }
+  },
+  "required": [
+    "category",
+    "total",
+    "count"
+  ],
+  "additionalProperties": false,
+  "examples": [
+    {
+      "category": "Shopping",
+      "total": 103.88,
+      "count": 2
+    }
+  ]
+}

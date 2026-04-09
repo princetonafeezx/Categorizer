@@ -1,0 +1,10 @@
+{
+  "name": "ll-categorizer schema index",
+  "files": [
+    "Schema/category-rule.schema.json",
+    "Schema/rule-match-result.schema.json",
+    "Schema/categorized-record.schema.json",
+    "Schema/category-summary-row.schema.json",
+    "Schema/classification-result.schema.json"
+  ]
+}
