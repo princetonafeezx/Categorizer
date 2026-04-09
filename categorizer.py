@@ -312,6 +312,27 @@ def print_rules(rules: dict[str, CategoryRule] | None = None) -> None:
     for merchant, payload in sorted(active_rules.items()):
         print(f"{merchant:<30}{payload['category']:<24}{payload['subcategory']}")
 
+def print_summary(records: Sequence[Mapping[str, Any]], flagged: Sequence[Mapping[str, Any]]) -> None:
+    summary_rows = summarize_categories(records)
+    print(f"{GREEN}Categorized Summary{RESET}")
+    print("-" * 55)
+    print(f"{'Category':<22}{'Count':>8}{'Total':>18}")
+    print("-" * 55)
+    for row in summary_rows:
+        print(f"{row['category']:<22}{row['count']:>8}{format_money(row['total']):>18}")
+
+    if flagged:
+        print()
+        print(f"{YELLOW}Low-confidence / review list{RESET}")
+        print("-" * 80)
+        print(f"{'Date':<12}{'Merchant':<28}{'Category':<18}{'Confidence':>10}")
+        print("-" * 80)
+        for item in flagged:
+            confidence_text = f"{item['confidence'] * 100:>8.1f}%"
+            print(f"{item['date']:<12}{item['merchant'][:27]:<28}{item['category']:<18}{confidence_text:>10}")
+    else:
+        print()
+        print(f"{GREEN}No low-confidence matches needed review.{RESET}")
 
 
 
